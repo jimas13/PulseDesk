@@ -3,6 +3,15 @@
   <ItemGroup>
     <ProjectReference Include="..\PulseDesk.Application\PulseDesk.Application.csproj" />
     <ProjectReference Include="..\PulseDesk.Domain\PulseDesk.Domain.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup>

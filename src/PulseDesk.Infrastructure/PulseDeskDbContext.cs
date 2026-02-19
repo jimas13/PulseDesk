@@ -1,4 +1,7 @@
-﻿namespace PulseDesk.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using PulseDesk.Domain.Entities;
+
+namespace PulseDesk.Infrastructure;
 
 public class PulseDeskDbContext : DbContext
 {

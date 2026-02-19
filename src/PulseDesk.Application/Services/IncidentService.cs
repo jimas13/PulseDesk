@@ -3,6 +3,7 @@ using PulseDesk.Application.DTOs;
 using PulseDesk.Application.Services.Abstract;
 using PulseDesk.Domain.Entities;
 using PulseDesk.Domain.ValueObjects;
+using PulseDesk.Application.Repositories.Abstract;
 
 public class IncidentService : IIncidentService
 {
