@@ -4,6 +4,7 @@ using PulseDesk.Domain.Entities;
 using PulseDesk.Domain.ValueObjects;
 using PulseDesk.Infrastructure;
 
+namespace PulseDesk.Infrastructure.Repositories;
 public class IncidentRepository : IIncidentRepository
 {
     private readonly PulseDeskDbContext _context;

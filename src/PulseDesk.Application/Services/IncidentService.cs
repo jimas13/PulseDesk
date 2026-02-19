@@ -1,10 +1,11 @@
 using PulseDesk.Application.Commands;
 using PulseDesk.Application.DTOs;
+using PulseDesk.Application.Repositories.Abstract;
 using PulseDesk.Application.Services.Abstract;
 using PulseDesk.Domain.Entities;
 using PulseDesk.Domain.ValueObjects;
-using PulseDesk.Application.Repositories.Abstract;
 
+namespace PulseDesk.Application.Services;
 public class IncidentService : IIncidentService
 {
     private readonly IIncidentRepository _repository;
@@ -32,6 +33,12 @@ public class IncidentService : IIncidentService
     {
         var incidents = await _repository.GetAllAsync(status);
         return incidents.Select(Map).ToList();
+    }
+
+    public async Task<IncidentDto?> GetByIdAsync(int id)
+    {
+        var incident = await _repository.GetByIdAsync(id);
+        return incident is null ? null : Map(incident);
     }
 
     private static IncidentDto Map(Incident i) =>

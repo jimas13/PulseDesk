@@ -4,6 +4,7 @@ using PulseDesk.Application.DTOs;
 using PulseDesk.Application.Services.Abstract;
 using PulseDesk.Domain.ValueObjects;
 
+namespace PulseDesk.Api.Controllers;
 [ApiController]
 [Route("api/incidents")]
 public class IncidentsController : ControllerBase
@@ -22,11 +23,21 @@ public class IncidentsController : ControllerBase
         return Ok(await _service.GetAllAsync(status));
     }
 
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<IncidentDto>> GetById(int id)
+    {
+        var incident = await _service.GetByIdAsync(id);
+        if (incident is null)
+            return NotFound();
+
+        return Ok(incident);
+    }
+
     [HttpPost]
     public async Task<ActionResult<IncidentDto>> Create(
-        CreateIncidentCommand command)
+        [FromBody] CreateIncidentCommand command)
     {
         var result = await _service.CreateAsync(command);
-        return CreatedAtAction(nameof(GetAll), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 }

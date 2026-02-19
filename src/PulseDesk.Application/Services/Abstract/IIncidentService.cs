@@ -6,5 +6,6 @@ namespace PulseDesk.Application.Services.Abstract;
 public interface IIncidentService
 {
     Task<IncidentDto> CreateAsync(CreateIncidentCommand command);
+    Task<IncidentDto?> GetByIdAsync(int id);
     Task<List<IncidentDto>> GetAllAsync(IncidentStatus? status);
 }

@@ -1,4 +1,8 @@
 
+using PulseDesk.Application.Services;
+using PulseDesk.Application.Services.Abstract;
+using PulseDesk.Infrastructure.Extension;
+
 namespace PulseDesk.Api;
 
 public class Program
@@ -10,6 +14,9 @@ public class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
+        builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddScoped<IIncidentService, IncidentService>();
+
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
