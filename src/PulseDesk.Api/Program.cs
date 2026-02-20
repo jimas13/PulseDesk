@@ -16,6 +16,7 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddScoped<IIncidentService, IncidentService>();
+        builder.Services.AddScoped<ICommentService, CommentService>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

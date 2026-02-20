@@ -17,4 +17,13 @@ public class Comment
         Message = message;
         CreatedAt = DateTime.UtcNow;
     }
+
+    public void Update(string? author, string? message)
+    {
+        if (!string.IsNullOrWhiteSpace(author))
+            Author = author;
+
+        if (!string.IsNullOrWhiteSpace(message))
+            Message = message;
+    }
 }

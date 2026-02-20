@@ -15,6 +15,7 @@ public static class InfrastructureExtensions
             options.UseSqlite(configuration.GetConnectionString("Default")));
 
         services.AddScoped<IIncidentRepository, IncidentRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
 
         return services;
     }
