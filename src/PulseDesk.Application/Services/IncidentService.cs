@@ -41,6 +41,32 @@ public class IncidentService : IIncidentService
         return incident is null ? null : Map(incident);
     }
 
+    public async Task<List<CommentDto>?> GetCommentsAsync(int incidentId)
+    {
+        var incident = await _repository.GetByIdAsync(incidentId);
+        if (incident is null)
+            return null;
+
+        var comments = await _repository.GetCommentsByIncidentIdAsync(incidentId);
+        return comments.Select(MapComment).ToList();
+    }
+
+    public async Task<CommentDto?> AddCommentAsync(int incidentId, CreateCommentCommand command)
+    {
+        var incident = await _repository.GetByIdAsync(incidentId);
+        if (incident is null)
+            return null;
+
+        incident.AddComment(command.Author, command.Message);
+        await _repository.SaveChangesAsync();
+
+        var comment = incident.Comments
+            .OrderByDescending(c => c.CreatedAt)
+            .First();
+
+        return MapComment(comment);
+    }
+
     private static IncidentDto Map(Incident i) =>
         new(
             i.Id,
@@ -49,5 +75,13 @@ public class IncidentService : IIncidentService
             i.Priority,
             i.Status,
             i.CreatedAt
+        );
+
+    private static CommentDto MapComment(Comment c) =>
+        new(
+            c.Id,
+            c.Author,
+            c.Message,
+            c.CreatedAt
         );
 }

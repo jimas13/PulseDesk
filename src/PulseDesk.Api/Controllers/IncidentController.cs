@@ -40,4 +40,26 @@ public class IncidentsController : ControllerBase
         var result = await _service.CreateAsync(command);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
+
+    [HttpGet("{incidentId:int}/comments")]
+    public async Task<ActionResult<List<CommentDto>>> GetComments(int incidentId)
+    {
+        var comments = await _service.GetCommentsAsync(incidentId);
+        if (comments is null)
+            return NotFound();
+
+        return Ok(comments);
+    }
+
+    [HttpPost("{incidentId:int}/comments")]
+    public async Task<ActionResult<CommentDto>> AddComment(
+        int incidentId,
+        [FromBody] CreateCommentCommand command)
+    {
+        var comment = await _service.AddCommentAsync(incidentId, command);
+        if (comment is null)
+            return NotFound();
+
+        return CreatedAtAction(nameof(GetComments), new { incidentId }, comment);
+    }
 }

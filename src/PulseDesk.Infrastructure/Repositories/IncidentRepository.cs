@@ -36,6 +36,15 @@ public class IncidentRepository : IIncidentRepository
         return await query.ToListAsync();
     }
 
+    public async Task<List<Comment>> GetCommentsByIncidentIdAsync(int incidentId)
+    {
+        return await _context.Incidents
+            .Where(i => i.Id == incidentId)
+            .SelectMany(i => i.Comments)
+            .OrderBy(c => c.CreatedAt)
+            .ToListAsync();
+    }
+
     public Task SaveChangesAsync()
         => _context.SaveChangesAsync();
 }
