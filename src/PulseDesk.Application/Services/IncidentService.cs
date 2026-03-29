@@ -2,86 +2,59 @@ using PulseDesk.Application.Commands;
 using PulseDesk.Application.DTOs;
 using PulseDesk.Application.Repositories.Abstract;
 using PulseDesk.Application.Services.Abstract;
-using PulseDesk.Domain.Entities;
-using PulseDesk.Domain.ValueObjects;
+using PulseDesk.Domain.Incidents;
 
 namespace PulseDesk.Application.Services;
 public class IncidentService : IIncidentService
 {
-    private readonly IIncidentRepository _repository;
+    private readonly IIncidentRepository _incidentRepository;
+    private readonly IUserRepository _userRepository;
 
-    public IncidentService(IIncidentRepository repository)
+    public IncidentService(IIncidentRepository incidentRepository, IUserRepository userRepository)
     {
-        _repository = repository;
+        _incidentRepository = incidentRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<IncidentDto> CreateAsync(CreateIncidentCommand command)
     {
-        var incident = new Incident(
-            command.Title,
-            command.Description,
-            command.Priority
-        );
+        var tempId = Guid.NewGuid();
+        var incident = new IncidentDto(tempId, command.Title, command.Description, command.Priority.ToString(), "Open", DateTime.UtcNow);
+        await _incidentRepository.AddAsync(incident);
+        await _incidentRepository.SaveChangesAsync();
 
-        await _repository.AddAsync(incident);
-        await _repository.SaveChangesAsync();
-
-        return Map(incident);
+        return incident;
     }
 
-    public async Task<List<IncidentDto>> GetAllAsync(IncidentStatus? status)
+    public async Task<IReadOnlyCollection<IncidentDto>> GetAllAsync()
     {
-        var incidents = await _repository.GetAllAsync(status);
-        return incidents.Select(Map).ToList();
+        var incidents = await _incidentRepository.GetAllAsync();
+        return incidents.ToList().AsReadOnly();
     }
 
-    public async Task<IncidentDto?> GetByIdAsync(int id)
+    public async Task<IncidentDto?> GetByIdAsync(Guid id)
     {
-        var incident = await _repository.GetByIdAsync(id);
-        return incident is null ? null : Map(incident);
-    }
+        
+        var incident = await _incidentRepository.GetByIdAsync(id);
+        return incident;
 
-    public async Task<List<CommentDto>?> GetCommentsAsync(int incidentId)
+    }
+    public async Task<IReadOnlyCollection<CommentDto>?> GetCommentsAsync(Guid incidentId)
     {
-        var incident = await _repository.GetByIdAsync(incidentId);
+        var incident = await _incidentRepository.GetByIdAsync(incidentId);
         if (incident is null)
             return null;
 
-        var comments = await _repository.GetCommentsByIncidentIdAsync(incidentId);
-        return comments.Select(MapComment).ToList();
+        var comments = await _incidentRepository.GetCommentsByIncidentIdAsync(incidentId);
+        return comments.ToList();
     }
-
-    public async Task<CommentDto?> AddCommentAsync(int incidentId, CreateCommentCommand command)
-    {
-        var incident = await _repository.GetByIdAsync(incidentId);
-        if (incident is null)
-            return null;
-
-        incident.AddComment(command.Author, command.Message);
-        await _repository.SaveChangesAsync();
-
-        var comment = incident.Comments
-            .OrderByDescending(c => c.CreatedAt)
-            .First();
-
-        return MapComment(comment);
-    }
-
     private static IncidentDto Map(Incident i) =>
         new(
-            i.Id,
+            i.Id.Id,
             i.Title,
             i.Description,
-            i.Priority,
-            i.Status,
+            i.Priority.ToString(),
+            i.Status.ToString(),
             i.CreatedAt
-        );
-
-    private static CommentDto MapComment(Comment c) =>
-        new(
-            c.Id,
-            c.Author,
-            c.Message,
-            c.CreatedAt
         );
 }

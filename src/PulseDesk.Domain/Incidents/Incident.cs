@@ -1,16 +1,16 @@
+using PulseDesk.Domain.Comments;
+using PulseDesk.Domain.Entities.Abstract;
+using PulseDesk.Domain.Users;
 using PulseDesk.Domain.ValueObjects;
 
-namespace PulseDesk.Domain.Entities;
+namespace PulseDesk.Domain.Incidents;
 
-public class Incident
+public class Incident : Entity
 {
-    public int Id { get; private set; }
     public string Title { get; private set; }
     public string Description { get; private set; }
     public IncidentPriority Priority { get; private set; }
     public IncidentStatus Status { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    public DateTime? UpdatedAt { get; private set; }
 
     private readonly List<Comment> _comments = new();
     public IReadOnlyCollection<Comment> Comments => _comments.AsReadOnly();
@@ -26,15 +26,34 @@ public class Incident
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void ChangeStatus(IncidentStatus newStatus)
+    private void ChangeStatus(IncidentStatus newStatus)
     {
         Status = newStatus;
-        UpdatedAt = DateTime.UtcNow;
+        ModifiedAt = DateTime.UtcNow;
     }
 
-    public void AddComment(string author, string message)
+    public void AddComment(User author, string message)
     {
         _comments.Add(new Comment(author, message));
-        UpdatedAt = DateTime.UtcNow;
+        ModifiedAt = DateTime.UtcNow;
     }
+
+    public void Resolve()
+    {
+        ChangeStatus(IncidentStatus.Resolved);
+    }
+    public void Close()
+    {
+        ChangeStatus(IncidentStatus.Closed);
+    }
+
+    public void Open()
+    {
+        ChangeStatus(IncidentStatus.Open);
+    }
+    public void SetInProgress()
+    {
+        ChangeStatus(IncidentStatus.InProgress);
+    }
+    
 }

@@ -1,11 +1,10 @@
-using PulseDesk.Domain.Entities;
 
+using PulseDesk.Application.DTOs;
 namespace PulseDesk.Application.Repositories.Abstract;
-
 public interface ICommentRepository
 {
-    Task<List<Comment>> GetAllAsync();
-    Task<Comment?> GetByIdAsync(int id);
-    Task<List<Comment>> GetByIdsAsync(List<int> ids);
+    Task<IEnumerable<CommentDto>> GetAllAsync();
+    Task<CommentDto?> GetByIdAsync(Guid id);
+    Task AddAsync(CommentDto comment);
     Task SaveChangesAsync();
 }

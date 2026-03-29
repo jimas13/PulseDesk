@@ -1,12 +1,27 @@
-﻿using PulseDesk.Domain.ValueObjects;
+﻿namespace PulseDesk.Application.DTOs;
 
-namespace PulseDesk.Application.DTOs;
-
-public record IncidentDto(
-    int Id,
+public record class IncidentDto(
+    Guid Id,
     string Title,
     string Description,
-    IncidentPriority Priority,
-    IncidentStatus Status,
+    string Priority,
+    string Status,
     DateTime CreatedAt
 );
+
+
+public enum IncidentDtoPriority
+{
+    Low,
+    Medium,
+    High,
+    Critical
+}
+
+public enum IncidentDtoStatus
+{
+    Open,
+    InProgress,
+    Resolved,
+    Closed
+}

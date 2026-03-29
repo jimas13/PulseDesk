@@ -1,7 +1,9 @@
 
+using PulseDesk.Application.Repositories.Abstract;
 using PulseDesk.Application.Services;
 using PulseDesk.Application.Services.Abstract;
 using PulseDesk.Infrastructure.Extension;
+using PulseDesk.Infrastructure.Repositories;
 
 namespace PulseDesk.Api;
 
@@ -17,13 +19,18 @@ public class Program
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddScoped<IIncidentService, IncidentService>();
         builder.Services.AddScoped<ICommentService, CommentService>();
-
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IIncidentRepository, IncidentRepository>();
+        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+        
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
+        
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
@@ -35,7 +42,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.UseAuthorization();
+        // app.UseAuthorization();
 
         app.MapControllers();
 

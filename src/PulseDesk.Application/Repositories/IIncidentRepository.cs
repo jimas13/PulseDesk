@@ -1,13 +1,11 @@
-using PulseDesk.Domain.Entities;
-using PulseDesk.Domain.ValueObjects;
+using PulseDesk.Application.DTOs;
 
 namespace PulseDesk.Application.Repositories.Abstract;
-
 public interface IIncidentRepository
 {
-    Task<Incident?> GetByIdAsync(int id);
-    Task<List<Incident>> GetAllAsync(IncidentStatus? status);
-    Task<List<Comment>> GetCommentsByIncidentIdAsync(int incidentId);
-    Task AddAsync(Incident incident);
+    Task<IncidentDto?> GetByIdAsync(Guid id);
+    Task<IEnumerable<IncidentDto>> GetAllAsync();
+    Task<IEnumerable<CommentDto>> GetCommentsByIncidentIdAsync(Guid incidentId);
+    Task AddAsync(IncidentDto incident);
     Task SaveChangesAsync();
 }

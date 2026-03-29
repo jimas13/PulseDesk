@@ -27,7 +27,7 @@ public class IncidentsController : ControllerBase
     public async Task<ActionResult<List<IncidentDto>>> GetAll(
         [FromQuery] IncidentStatus? status)
     {
-        return Ok(await _service.GetAllAsync(status));
+        return Ok(await _service.GetAllAsync());
     }
 
     /// <summary>
@@ -35,10 +35,10 @@ public class IncidentsController : ControllerBase
     /// </summary>
     /// <param name="id">Incident identifier.</param>
     /// <returns>The requested incident if found.</returns>
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(IncidentDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IncidentDto>> GetById(int id)
+    public async Task<ActionResult<IncidentDto>> GetById(Guid id)
     {
         var incident = await _service.GetByIdAsync(id);
         if (incident is null)
@@ -68,37 +68,37 @@ public class IncidentsController : ControllerBase
     /// </summary>
     /// <param name="incidentId">Incident identifier.</param>
     /// <returns>The list of comments for the incident.</returns>
-    [HttpGet("{incidentId:int}/comments")]
+    [HttpGet("{id:guid}/comments")]
     [ProducesResponseType(typeof(List<CommentDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<CommentDto>>> GetComments(int incidentId)
+    public async Task<ActionResult<List<CommentDto>>> GetComments(Guid id)
     {
-        var comments = await _service.GetCommentsAsync(incidentId);
+        var comments = await _service.GetCommentsAsync(id);
         if (comments is null)
             return NotFound();
 
         return Ok(comments);
     }
 
-    /// <summary>
-    /// Adds a new comment to a specific incident.
-    /// </summary>
-    /// <param name="incidentId">Incident identifier.</param>
-    /// <param name="command">Comment creation payload.</param>
-    /// <returns>The created comment.</returns>
-    [HttpPost("{incidentId:int}/comments")]
-    [Consumes("application/json")]
-    [ProducesResponseType(typeof(CommentDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<CommentDto>> AddComment(
-        int incidentId,
-        [FromBody] CreateCommentCommand command)
-    {
-        var comment = await _service.AddCommentAsync(incidentId, command);
-        if (comment is null)
-            return NotFound();
+    // /// <summary>
+    // /// Adds a new comment to a specific incident.
+    // /// </summary>
+    // /// <param name="incidentId">Incident identifier.</param>
+    // /// <param name="command">Comment creation payload.</param>
+    // /// <returns>The created comment.</returns>
+    // [HttpPost("{incidentId:int}/comments")]
+    // [Consumes("application/json")]
+    // [ProducesResponseType(typeof(CommentDto), StatusCodes.Status201Created)]
+    // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    // [ProducesResponseType(StatusCodes.Status404NotFound)]
+    // public async Task<ActionResult<CommentDto>> AddComment(
+    //     int incidentId,
+    //     [FromBody] CreateCommentCommand command)
+    // {
+    //     var comment = await _service.AddCommentAsync(incidentId, command);
+    //     if (comment is null)
+    //         return NotFound();
 
-        return CreatedAtAction(nameof(GetComments), new { incidentId }, comment);
-    }
+    //     return CreatedAtAction(nameof(GetComments), new { incidentId }, comment);
+    // }
 }

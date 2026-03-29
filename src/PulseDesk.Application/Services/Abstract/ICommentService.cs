@@ -5,8 +5,7 @@ namespace PulseDesk.Application.Services.Abstract;
 
 public interface ICommentService
 {
-    Task<List<CommentDto>> GetAllAsync();
-    Task<CommentDto?> GetByIdAsync(int id);
-    Task<CommentDto?> UpdateAsync(int id, UpdateCommentCommand command);
-    Task<List<CommentDto>> BulkUpdateAsync(BulkUpdateCommentsCommand command);
+    Task<IReadOnlyCollection<CommentDto>> GetAllAsync();
+    Task<CommentDto?> GetByIdAsync(Guid id);
+    Task<CommentDto> CreateAsync(CreateCommentCommand command);
 }

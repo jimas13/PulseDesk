@@ -1,6 +1,9 @@
+using PulseDesk.Domain.Users;
+
 namespace PulseDesk.Application.Commands;
 
 public record CreateCommentCommand(
-    string Author,
+    Guid AuthorId,
+    Guid IncidentId,
     string Message
 );
