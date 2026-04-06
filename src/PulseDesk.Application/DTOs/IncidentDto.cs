@@ -1,13 +1,14 @@
 ﻿namespace PulseDesk.Application.DTOs;
 
-public record class IncidentDto(
-    Guid Id,
-    string Title,
-    string Description,
-    string Priority,
-    string Status,
-    DateTime CreatedAt
-);
+public class IncidentDto
+{
+    public Guid Id {get; init;}
+    public string Title {get; init;}
+    public string Description {get; init;}
+    public string Priority {get; init;}
+    public string Status {get; init;}
+    public DateTime CreatedAt {get; init;}
+}
 
 
 public enum IncidentDtoPriority

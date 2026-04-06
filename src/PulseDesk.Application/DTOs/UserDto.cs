@@ -1,10 +1,8 @@
-﻿using PulseDesk.Domain.Entities.ValueObjects;
-using PulseDesk.Domain.ValueObjects;
+﻿namespace PulseDesk.Application.DTOs;
 
-namespace PulseDesk.Application.DTOs;
-
-public record UserDto(
-    Guid Id,
-    string Name,
-    string Surname
-);
+public record UserDto
+{
+    public Guid Id {get; init;}
+    public string Name {get; init;}
+    public string Surname {get; init;}
+}
